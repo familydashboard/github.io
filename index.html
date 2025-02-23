@@ -58,6 +58,20 @@
       await deleteDoc(doc(db, "tasks", id)); // Reference to the specific document
       loadTasks(); // Reload tasks after removal
     }
+
+    // Add event listener to the Add Task button
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('add-task-btn').addEventListener('click', function() {
+        const taskInput = document.getElementById('task-input').value;
+        if (taskInput) {
+          addTask(taskInput);  // Pass input value to addTask
+          document.getElementById('task-input').value = '';  // Clear the input after adding
+        }
+      });
+
+      // Load tasks when the page is loaded
+      loadTasks();
+    });
   </script>
 </head>
 <body>
@@ -74,12 +88,4 @@
     <!-- Todo items will appear here -->
   </ul>
 
-  <input type="text" id="task-input" placeholder="Add a new task">
-  <button onclick="addTask(document.getElementById('task-input').value)">Add Task</button>
-
-  <script>
-    // Load tasks when the page is loaded
-    window.onload = loadTasks;
-  </script>
-</body>
-</html>
+  <input type="text" id="task
