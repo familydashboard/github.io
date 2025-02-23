@@ -55,8 +55,14 @@
 
     // Remove task from Firestore
     async function removeTask(id) {
-      await deleteDoc(doc(db, "tasks", id)); // Reference to the specific document
-      loadTasks(); // Reload tasks after removal
+      console.log("Attempting to remove task with ID: " + id);  // Debug log
+      try {
+        await deleteDoc(doc(db, "tasks", id)); // Reference to the specific document
+        console.log("Task removed successfully!"); // Debug log
+        loadTasks(); // Reload tasks after removal
+      } catch (e) {
+        console.error("Error removing task: ", e); // Log any errors
+      }
     }
 
     // Add event listener to the Add Task button
