@@ -3,14 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Family Dashboard</title>
-  <!-- Firebase SDK -->
+  <title>Task Dashboard</title>
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBE8GbgeHzxoExLq9q2xfMOhtpN13v_SPw",
       authDomain: "fir-familydashboard.firebaseapp.com",
@@ -20,82 +17,73 @@
       appId: "1:940272525714:web:4763a9a6431be05bf9214b"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);  // Initialize Firestore
+    const db = getFirestore(app);
 
-    // Reference to the Firestore collection
-    const tasksRef = collection(db, "tasks");
+    // Set initial list to To-Do
+    let currentList = 'todos';
 
-    // Add task to Firestore
-    async function addTask(taskText) {
-      try {
-        await addDoc(tasksRef, {
-          task: taskText
+    // Toggle between To-Do and Grocery list
+    function switchList(list) {
+      currentList = list;
+      document.getElementById("list-title").innerText = list === 'todos' ? 'To-Do List' : 'Grocery List';
+      loadTasks();
+    }
+
+    // Add a task to Firestore
+    async function addTask() {
+      const task = document.getElementById("task-input").value;
+      if (task) {
+        await addDoc(collection(db, currentList), {
+          task: task
         });
-        loadTasks(); // Reload tasks after adding
-      } catch (e) {
-        console.error("Error adding document: ", e);
+        document.getElementById("task-input").value = '';
+        loadTasks();
       }
     }
 
     // Load tasks from Firestore
     async function loadTasks() {
-      const todoList = document.getElementById('todo-list');
-      todoList.innerHTML = ''; // Clear the list before loading new data
+      const taskList = document.getElementById("task-list");
+      taskList.innerHTML = '';
 
-      const querySnapshot = await getDocs(collection(db, "tasks"));
+      const querySnapshot = await getDocs(collection(db, currentList));
       querySnapshot.forEach((doc) => {
-        const task = doc.data().task;
-        const li = document.createElement('li');
-        li.innerHTML = `${task} <button onclick="removeTask('${doc.id}')">Remove</button>`;
-        todoList.appendChild(li);
+        const taskElement = document.createElement("li");
+        taskElement.textContent = doc.data().task;
+
+        // Add remove button
+        const removeButton = document.createElement("button");
+        removeButton.textContent = 'Remove';
+        removeButton.onclick = () => removeTask(doc.id);
+
+        taskElement.appendChild(removeButton);
+        taskList.appendChild(taskElement);
       });
     }
 
-    // Remove task from Firestore
-    window.removeTask = async function(id) {
-      console.log("Attempting to remove task with ID: " + id);  // Debug log
-      try {
-        await deleteDoc(doc(db, "tasks", id)); // Reference to the specific document
-        console.log("Task removed successfully!"); // Debug log
-        loadTasks(); // Reload tasks after removal
-      } catch (e) {
-        console.error("Error removing task: ", e); // Log any errors
-      }
-    };
-
-    // Add event listener to the Add Task button
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('add-task-btn').addEventListener('click', function() {
-        const taskInput = document.getElementById('task-input').value;
-        if (taskInput) {
-          addTask(taskInput);  // Pass input value to addTask
-          document.getElementById('task-input').value = '';  // Clear the input after adding
-        }
-      });
-
-      // Load tasks when the page is loaded
+    // Remove a task from Firestore
+    async function removeTask(taskId) {
+      await deleteDoc(doc(db, currentList, taskId));
       loadTasks();
-    });
+    }
+
+    // Initial load
+    window.onload = function() {
+      loadTasks();
+    };
   </script>
 </head>
 <body>
-  <h1>Family Dashboard</h1>
-
-  <!-- Weather Section (Example) -->
-  <div id="weather">
-    <!-- Weather info will be here -->
+  <h1 id="list-title">To-Do List</h1>
+  <div>
+    <button onclick="switchList('todos')">To-Do List</button>
+    <button onclick="switchList('groceries')">Grocery List</button>
   </div>
-
-  <!-- Todo List Section -->
-  <h2>Todo List</h2>
-  <ul id="todo-list">
-    <!-- Todo items will appear here -->
-  </ul>
-
-  <!-- Input box and button -->
-  <input type="text" id="task-input" placeholder="Add a new task">
-  <button id="add-task-btn">Add Task</button>
+  <div>
+    <input type="text" id="task-input" placeholder="Enter a task">
+    <button onclick="addTask()">Add Task</button>
+  </div>
+  <ul id="task-list"></ul>
 </body>
 </html>
