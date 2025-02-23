@@ -4,6 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Dashboard</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+    }
+    .list-section {
+      width: 45%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    h2 {
+      text-align: center;
+    }
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+    button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    input {
+      width: 80%;
+      padding: 5px;
+    }
+  </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
@@ -20,34 +56,24 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Set initial list to To-Do
-    let currentList = 'todos';
-
-    // Toggle between To-Do and Grocery list
-    function switchList(list) {
-      currentList = list;
-      document.getElementById("list-title").innerText = list === 'todos' ? 'To-Do List' : 'Grocery List';
-      loadTasks();
-    }
-
     // Add a task to Firestore
-    async function addTask() {
-      const task = document.getElementById("task-input").value;
+    async function addTask(listName) {
+      const task = document.getElementById(`${listName}-task-input`).value;
       if (task) {
-        await addDoc(collection(db, currentList), {
+        await addDoc(collection(db, listName), {
           task: task
         });
-        document.getElementById("task-input").value = '';
-        loadTasks();
+        document.getElementById(`${listName}-task-input`).value = '';
+        loadTasks(listName);
       }
     }
 
     // Load tasks from Firestore
-    async function loadTasks() {
-      const taskList = document.getElementById("task-list");
+    async function loadTasks(listName) {
+      const taskList = document.getElementById(`${listName}-task-list`);
       taskList.innerHTML = '';
 
-      const querySnapshot = await getDocs(collection(db, currentList));
+      const querySnapshot = await getDocs(collection(db, listName));
       querySnapshot.forEach((doc) => {
         const taskElement = document.createElement("li");
         taskElement.textContent = doc.data().task;
@@ -55,7 +81,7 @@
         // Add remove button
         const removeButton = document.createElement("button");
         removeButton.textContent = 'Remove';
-        removeButton.onclick = () => removeTask(doc.id);
+        removeButton.onclick = () => removeTask(listName, doc.id);
 
         taskElement.appendChild(removeButton);
         taskList.appendChild(taskElement);
@@ -63,27 +89,31 @@
     }
 
     // Remove a task from Firestore
-    async function removeTask(taskId) {
-      await deleteDoc(doc(db, currentList, taskId));
-      loadTasks();
+    async function removeTask(listName, taskId) {
+      await deleteDoc(doc(db, listName, taskId));
+      loadTasks(listName);
     }
 
-    // Initial load
+    // Initial load for both lists
     window.onload = function() {
-      loadTasks();
+      loadTasks('todos');
+      loadTasks('groceries');
     };
   </script>
 </head>
 <body>
-  <h1 id="list-title">To-Do List</h1>
-  <div>
-    <button onclick="switchList('todos')">To-Do List</button>
-    <button onclick="switchList('groceries')">Grocery List</button>
+  <div class="list-section">
+    <h2>To-Do List</h2>
+    <input type="text" id="todos-task-input" placeholder="Enter a To-Do task">
+    <button onclick="addTask('todos')">Add Task</button>
+    <ul id="todos-task-list"></ul>
   </div>
-  <div>
-    <input type="text" id="task-input" placeholder="Enter a task">
-    <button onclick="addTask()">Add Task</button>
+  
+  <div class="list-section">
+    <h2>Grocery List</h2>
+    <input type="text" id="groceries-task-input" placeholder="Enter a Grocery task">
+    <button onclick="addTask('groceries')">Add Task</button>
+    <ul id="groceries-task-list"></ul>
   </div>
-  <ul id="task-list"></ul>
 </body>
 </html>
