@@ -3,59 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My To-Do List</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    #todo-list {
-      list-style-type: none;
-      padding: 0;
-    }
-    #todo-list li {
-      padding: 10px;
-      background-color: #f4f4f4;
-      margin: 5px 0;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    input[type="text"] {
-      padding: 10px;
-      width: 200px;
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>My To-Do List</h1>
-
-  <!-- Input for new task -->
-  <input type="text" id="new-task" placeholder="Enter a new task" />
-  <button onclick="addTask()">Add Task</button>
-
-  <!-- List of tasks -->
-  <ul id="todo-list"></ul>
-
+  <title>Family Dashboard</title>
   <!-- Firebase SDK -->
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -69,12 +22,27 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = getFirestore(app);  // Initialize Firestore
+
+    // Reference to the Firestore collection
+    const tasksRef = collection(db, "tasks");
+
+    // Add task to Firestore
+    async function addTask(taskText) {
+      try {
+        await addDoc(tasksRef, {
+          task: taskText
+        });
+        loadTasks(); // Reload tasks after adding
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
 
     // Load tasks from Firestore
     async function loadTasks() {
       const todoList = document.getElementById('todo-list');
-      todoList.innerHTML = '';
+      todoList.innerHTML = ''; // Clear the list before loading new data
 
       const querySnapshot = await getDocs(collection(db, "tasks"));
       querySnapshot.forEach((doc) => {
@@ -85,29 +53,33 @@
       });
     }
 
-    // Add task to Firestore
-    async function addTask() {
-      const taskInput = document.getElementById('new-task');
-      const task = taskInput.value.trim();
-
-      if (task) {
-        await addDoc(collection(db, "tasks"), {
-          task: task
-        });
-        taskInput.value = ''; // Clear input field
-        loadTasks(); // Reload tasks
-      }
-    }
-
     // Remove task from Firestore
-    async function removeTask(taskId) {
-      await deleteDoc(doc(db, "tasks", taskId));
-      loadTasks(); // Reload tasks
+    async function removeTask(id) {
+      await deleteDoc(doc(db, "tasks", id)); // Reference to the specific document
+      loadTasks(); // Reload tasks after removal
     }
-
-    // Initialize the page
-    loadTasks();
   </script>
+</head>
+<body>
+  <h1>Family Dashboard</h1>
 
+  <!-- Weather Section (Example) -->
+  <div id="weather">
+    <!-- Weather info will be here -->
+  </div>
+
+  <!-- Todo List Section -->
+  <h2>Todo List</h2>
+  <ul id="todo-list">
+    <!-- Todo items will appear here -->
+  </ul>
+
+  <input type="text" id="task-input" placeholder="Add a new task">
+  <button onclick="addTask(document.getElementById('task-input').value)">Add Task</button>
+
+  <script>
+    // Load tasks when the page is loaded
+    window.onload = loadTasks;
+  </script>
 </body>
 </html>
