@@ -4,112 +4,82 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Family Dashboard</title>
-  <script type="module">
-    // Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBE8GbgeHzxoExLq9q2xfMOhtpN13v_SPw",
-      authDomain: "fir-familydashboard.firebaseapp.com",
-      projectId: "fir-familydashboard",
-      storageBucket: "fir-familydashboard.firebasestorage.app",
-      messagingSenderId: "940272525714",
-      appId: "1:940272525714:web:4763a9a6431be05bf9214b"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const tasksRef = collection(db, "tasks");
-
-    async function addTask(taskText) {
-      try {
-        await addDoc(tasksRef, { task: taskText });
-        loadTasks();
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
+  <style>
+    /* Flexbox container for the sections */
+    .container {
+      display: flex;
+      flex-wrap: wrap; /* Ensure content wraps when needed */
+      gap: 20px; /* Space between sections */
+      justify-content: space-between; /* Distribute space evenly */
     }
 
-    async function loadTasks() {
-      const todoList = document.getElementById('todo-list');
-      todoList.innerHTML = '';
-      const querySnapshot = await getDocs(collection(db, "tasks"));
-      querySnapshot.forEach((doc) => {
-        const task = doc.data().task;
-        const li = document.createElement('li');
-        li.innerHTML = `${task} <button onclick="removeTask('${doc.id}')">Remove</button>`;
-        todoList.appendChild(li);
-      });
+    /* Individual section styling */
+    .section {
+      width: 30%; /* Width of each section */
+      min-width: 300px; /* Prevent sections from getting too narrow */
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #f9f9f9;
     }
 
-    window.removeTask = async function(id) {
-      try {
-        await deleteDoc(doc(db, "tasks", id));
-        loadTasks();
-      } catch (e) {
-        console.error("Error removing task: ", e);
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('add-task-btn').addEventListener('click', function() {
-        const taskInput = document.getElementById('task-input').value;
-        if (taskInput) {
-          addTask(taskInput);
-          document.getElementById('task-input').value = '';
-        }
-      });
-
-      loadTasks();
-      fetchWeather();  // Call to fetch weather data
-    });
-
-    // Weather API integration
-    async function fetchWeather() {
-      const weatherApiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API Key
-      const city = 'YOUR_CITY'; // Replace with the city you want to show weather for
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}&units=metric`;
-
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        displayWeather(data);
-      } catch (error) {
-        console.error('Error fetching weather:', error);
-      }
+    /* Optional: styling for headers */
+    h1, h2, h3 {
+      text-align: center;
     }
 
-    // Display weather data on the page
-    function displayWeather(data) {
-      const weatherSection = document.getElementById('weather');
-      const temp = data.main.temp;
-      const description = data.weather[0].description;
-      const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
-
-      weatherSection.innerHTML = `
-        <h2>Weather</h2>
-        <p>Temperature: ${temp}°C</p>
-        <p>Description: ${description}</p>
-        <img src="${icon}" alt="Weather Icon">
-      `;
+    /* Optional: make weather widget responsive */
+    .tomorrow {
+      width: 100%; /* Ensure it fits in the section */
+      margin-bottom: 10px;
     }
-  </script>
+  </style>
 </head>
 <body>
   <h1>Family Dashboard</h1>
 
-  <!-- Weather Section -->
-  <div id="weather"></div>
+  <!-- Container to hold the sections -->
+  <div class="container">
+    <!-- Weather Section -->
+    <div class="section">
+      <h2>Weather</h2>
+      <div class="tomorrow"
+        data-location-id="114990"
+        data-language="EN"
+        data-unit-system="IMPERIAL"
+        data-skin="light"
+        data-widget-type="upcoming"
+        style="padding-bottom:22px;position:relative;">
+        <a
+          href="https://www.tomorrow.io/weather-api/"
+          rel="nofollow noopener noreferrer"
+          target="_blank"
+          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;">
+          <img
+            alt="Powered by the Tomorrow.io Weather API"
+            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+            width="250"
+            height="18"/>
+        </a>
+      </div>
+    </div>
 
-  <!-- Todo List Section -->
-  <h2>Todo List</h2>
-  <ul id="todo-list"></ul>
+    <!-- Todo List Section -->
+    <div class="section">
+      <h2>Todo List</h2>
+      <ul id="todo-list"></ul>
+      <input type="text" id="task-input" placeholder="Add a new task">
+      <button id="add-task-btn">Add Task</button>
+    </div>
 
-  <input type="text" id="task-input" placeholder="Add a new task">
-  <button id="add-task-btn">Add Task</button>
+    <!-- Grocery List Section -->
+    <div class="section">
+      <h2>Grocery List</h2>
+      <ul id="grocery-list"></ul>
+      <input type="text" id="grocery-input" placeholder="Add a new grocery item">
+      <button id="add-grocery-btn">Add Grocery</button>
+    </div>
+  </div>
+
 </body>
 </html>
