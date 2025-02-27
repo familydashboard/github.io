@@ -157,6 +157,34 @@
     <script async src="https://app3.weatherwidget.org/js/?id=ww_f9a11719b1df9"></script>
   </div>
 
+  <!-- Ramadan Tracker Section -->
+  <div class="ramadan-container">
+    <h2>Ramadan Tracker</h2>
+    <p id="tracker"></p>
+    <script>
+        // Set Ramadan 2025 start date as February 28, 2025
+        const ramadanStart = new Date('2025-02-28T00:00:00');  
+        const ramadanDays = 29; // Typically 29 or 30 days
+
+        function updateTracker() {
+            const today = new Date();
+            const timeDiff = today - ramadanStart;
+            const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+            if (dayNumber >= 1 && dayNumber <= ramadanDays) {
+                const daysLeft = ramadanDays - dayNumber;
+                document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
+            } else if (dayNumber < 1) {
+                document.getElementById('tracker').textContent = "Ramadan hasn't started yet!";
+            } else {
+                document.getElementById('tracker').textContent = "Ramadan 2025 is over!";
+            }
+        }
+
+        updateTracker();
+    </script>
+  </div>
+
   <!-- Calendar Section -->
   <div class="calendar-container">
     <h2>Calendar</h2>
