@@ -93,20 +93,21 @@
       grid-column: 1;
       grid-row: 1;
       width: 450px; /* Fixed width */
+      overflow: visible; /* Allow widget to render fully */
     }
     .ramadan-container {
       grid-column: 1;
       grid-row: 2;
-      padding: 10px; /* Matches list-section */
-      width: 450px; /* Fixed width to match weather */
+      padding: 10px;
+      width: 450px;
     }
     .prayer-container {
       grid-column: 1;
       grid-row: 3;
-      width: 450px; /* Fixed width to match weather */
-      max-height: 300px; /* Reduced to fit grid row and eliminate white box */
-      overflow: hidden; /* Prevents overflow */
-      padding: 0; /* Remove padding to tighten fit */
+      width: 450px;
+      max-height: 300px;
+      overflow: hidden;
+      padding: 0;
     }
     .calendar-container {
       grid-column: 2;
@@ -130,7 +131,7 @@
       overflow-y: auto;
     }
     h2 {
-      margin: 0 0 5px 0; /* Tighten spacing, no top margin */
+      margin: 0 0 5px 0;
       color: #fff;
       font-size: 1.1em;
     }
@@ -161,13 +162,13 @@
     }
     iframe {
       max-width: 100%;
-      height: 300px; /* Default height */
+      height: 300px;
     }
     .ramadan-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%; /* Fills container */
+      width: 100%;
     }
     .ramadan-header h2 {
       margin: 0;
@@ -182,7 +183,7 @@
   <!-- Weather Section -->
   <div class="weather-container">
     <h2>Weather</h2>
-    <div id="ww_f9a11719b1df9" v='1.3' loc='id' a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":["wl1431"],"font":"Arial","sl_ics":"one_a","sl_sot":"fahrenheit","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_phw":3}'>
+    <div id="ww_f9a11719b1df9" v="1.3" loc="id" a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":["wl1431"],"font":"Arial","sl_ics":"one_a","sl_sot":"fahrenheit","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722","el_phw":3}'>
       More forecasts: <a href="https://oneweather.org/new_york_city/30_days/" id="ww_f9a11719b1df9_u" target="_blank">New York weather 30 day forecast</a>
     </div>
     <script async src="https://app3.weatherwidget.org/js/?id=ww_f9a11719b1df9"></script>
