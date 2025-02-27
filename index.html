@@ -4,82 +4,181 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Family Dashboard</title>
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBE8GbgeHzxoExLq9q2xfMOhtpN13v_SPw",
+      authDomain: "fir-familydashboard.firebaseapp.com",
+      projectId: "fir-familydashboard",
+      storageBucket: "fir-familydashboard.firebasestorage.app",
+      messagingSenderId: "940272525714",
+      appId: "1:940272525714:web:4763a9a6431be05bf9214b"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Reference to the Firestore collections
+    const todoRef = collection(db, "todos");
+    const groceryRef = collection(db, "groceries");
+
+    // Add task to Firestore
+    async function addTask(taskText, listName) {
+      try {
+        const ref = listName === 'todos' ? todoRef : groceryRef;
+        await addDoc(ref, { task: taskText });
+        loadTasks(listName); // Reload tasks after adding
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+
+    // Load tasks from Firestore
+    async function loadTasks(listName) {
+      const taskList = document.getElementById(`${listName}-list`);
+      taskList.innerHTML = ''; // Clear the list before loading new data
+
+      const querySnapshot = await getDocs(listName === 'todos' ? todoRef : groceryRef);
+      querySnapshot.forEach((doc) => {
+        const task = doc.data().task;
+        const li = document.createElement('li');
+        li.innerHTML = `${task} <button onclick="removeTask('${listName}', '${doc.id}')">Remove</button>`;
+        taskList.appendChild(li);
+      });
+    }
+
+    // Remove task from Firestore
+    window.removeTask = async function(listName, id) {
+      try {
+        const ref = listName === 'todos' ? todoRef : groceryRef;
+        await deleteDoc(doc(db, listName, id));
+        loadTasks(listName); // Reload tasks after removal
+      } catch (e) {
+        console.error("Error removing task: ", e);
+      }
+    };
+
+    // Add event listeners to the Add Task buttons
+    document.addEventListener('DOMContentLoaded', function() {
+      // To-Do list
+      document.getElementById('add-todo-btn').addEventListener('click', function() {
+        const taskInput = document.getElementById('todo-input').value;
+        if (taskInput) {
+          addTask(taskInput, 'todos');  // Add task to To-Do list
+          document.getElementById('todo-input').value = '';  // Clear the input after adding
+        }
+      });
+
+      // Grocery list
+      document.getElementById('add-grocery-btn').addEventListener('click', function() {
+        const taskInput = document.getElementById('grocery-input').value;
+        if (taskInput) {
+          addTask(taskInput, 'groceries');  // Add task to Grocery list
+          document.getElementById('grocery-input').value = '';  // Clear the input after adding
+        }
+      });
+
+      // Load tasks on page load
+      loadTasks('todos');
+      loadTasks('groceries');
+    });
+  </script>
   <style>
-    /* Flexbox container for the sections */
-    .container {
+    body {
       display: flex;
-      flex-wrap: wrap; /* Ensure content wraps when needed */
-      gap: 20px; /* Space between sections */
-      justify-content: space-between; /* Distribute space evenly */
-    }
-
-    /* Individual section styling */
-    .section {
-      width: 30%; /* Width of each section */
-      min-width: 300px; /* Prevent sections from getting too narrow */
+      justify-content: space-around;
+      flex-wrap: wrap;
       padding: 20px;
-      border: 1px solid #ccc;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-color: #f9f9f9;
     }
-
-    /* Optional: styling for headers */
-    h1, h2, h3 {
+    .list-section {
+      width: 30%;
+      min-width: 300px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      margin: 10px;
+    }
+    h2 {
       text-align: center;
     }
-
-    /* Optional: make weather widget responsive */
-    .tomorrow {
-      width: 100%; /* Ensure it fits in the section */
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+    button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    input {
+      width: 80%;
+      padding: 5px;
       margin-bottom: 10px;
+    }
+    .tomorrow {
+      width: 100%;
+      padding-bottom: 22px;
+      position: relative;
+    }
+    .tomorrow a {
+      position: absolute;
+      bottom: 0;
+      transform: translateX(-50%);
+      left: 50%;
     }
   </style>
 </head>
 <body>
-  <h1>Family Dashboard</h1>
-
-  <!-- Container to hold the sections -->
-  <div class="container">
-    <!-- Weather Section -->
-    <div class="section">
-      <h2>Weather</h2>
-      <div class="tomorrow"
-        data-location-id="114990"
-        data-language="EN"
-        data-unit-system="IMPERIAL"
-        data-skin="light"
-        data-widget-type="upcoming"
-        style="padding-bottom:22px;position:relative;">
-        <a
-          href="https://www.tomorrow.io/weather-api/"
-          rel="nofollow noopener noreferrer"
-          target="_blank"
-          style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;">
-          <img
-            alt="Powered by the Tomorrow.io Weather API"
-            src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-            width="250"
-            height="18"/>
-        </a>
-      </div>
-    </div>
-
-    <!-- Todo List Section -->
-    <div class="section">
-      <h2>Todo List</h2>
-      <ul id="todo-list"></ul>
-      <input type="text" id="task-input" placeholder="Add a new task">
-      <button id="add-task-btn">Add Task</button>
-    </div>
-
-    <!-- Grocery List Section -->
-    <div class="section">
-      <h2>Grocery List</h2>
-      <ul id="grocery-list"></ul>
-      <input type="text" id="grocery-input" placeholder="Add a new grocery item">
-      <button id="add-grocery-btn">Add Grocery</button>
-    </div>
+  <!-- To-Do List Section -->
+  <div class="list-section">
+    <h2>To-Do List</h2>
+    <input type="text" id="todo-input" placeholder="Add a To-Do task">
+    <button id="add-todo-btn">Add Task</button>
+    <ul id="todos-list"></ul>
   </div>
 
+  <!-- Grocery List Section -->
+  <div class="list-section">
+    <h2>Grocery List</h2>
+    <input type="text" id="grocery-input" placeholder="Add a Grocery task">
+    <button id="add-grocery-btn">Add Task</button>
+    <ul id="groceries-list"></ul>
+  </div>
+
+  <!-- Weather Widget Section -->
+  <div class="list-section">
+    <h2>Weather</h2>
+    <div class="tomorrow"
+      data-location-id="114990"
+      data-language="EN"
+      data-unit-system="IMPERIAL"
+      data-skin="light"
+      data-widget-type="upcoming">
+      <a
+        href="https://www.tomorrow.io/weather-api/"
+        rel="nofollow noopener noreferrer"
+        target="_blank">
+        <img
+          alt="Powered by the Tomorrow.io Weather API"
+          src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
+          width="250"
+          height="18"/>
+      </a>
+    </div>
+  </div>
 </body>
 </html>
