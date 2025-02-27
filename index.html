@@ -122,6 +122,24 @@
       min-width: 0;
       overflow-y: auto; /* Scroll if list grows too long */
     }
+    .ramadan-container {
+  padding: 10px; /* Matches list-section */
+    }
+
+    .ramadan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+    }
+
+    .ramadan-header h2 {
+  margin: 0; /* Remove default margin for alignment */
+    }
+
+    .ramadan-header p {
+  margin: 0; /* Remove default margin for alignment */
+  font-size: 1.1em; /* Match h2 size for balance */
+    }
     h2 {
       margin-top: 0;
       color: #fff;
@@ -169,31 +187,33 @@
   </div>
 
   <!-- Ramadan Tracker Section -->
-  <div class="ramadan-container">
+<div class="ramadan-container list-section">
+  <div class="ramadan-header">
     <h2>Ramadan Tracker</h2>
     <p id="tracker"></p>
-    <script>
-        const ramadanStart = new Date('2025-02-27T00:00:00');  
-        const ramadanDays = 29;
-
-        function updateTracker() {
-            const today = new Date();
-            const timeDiff = today - ramadanStart;
-            const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
-
-            if (dayNumber >= 1 && dayNumber <= ramadanDays) {
-                const daysLeft = ramadanDays - dayNumber;
-                document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
-            } else if (dayNumber < 1) {
-                document.getElementById('tracker').textContent = "Ramadan hasn't started yet!";
-            } else {
-                document.getElementById('tracker').textContent = "Ramadan 2025 is over!";
-            }
-        }
-
-        updateTracker();
-    </script>
   </div>
+  <script>
+      const ramadanStart = new Date('2025-02-27T00:00:00');  
+      const ramadanDays = 29;
+
+      function updateTracker() {
+          const today = new Date();
+          const timeDiff = today - ramadanStart;
+          const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+          if (dayNumber >= 1 && dayNumber <= ramadanDays) {
+              const daysLeft = ramadanDays - dayNumber;
+              document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
+          } else if (dayNumber < 1) {
+              document.getElementById('tracker').textContent = "Hasn't started yet!";
+          } else {
+              document.getElementById('tracker').textContent = "2025 is over!";
+          }
+      }
+
+      updateTracker();
+  </script>
+</div>
 
   <!-- Prayer Tracker Section -->
   <div class="prayer-container">
