@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Family Dashboard</title>
+  <title>Magic Mirror Display</title>
   <!-- Firebase SDK -->
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBE8GbgeHzxoExLq9q2xfMOhtpN13v_SPw",
       authDomain: "fir-familydashboard.firebaseapp.com",
@@ -20,30 +18,24 @@
       appId: "1:940272525714:web:4763a9a6431be05bf9214b"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Reference to the Firestore collections
     const todoRef = collection(db, "todos");
     const groceryRef = collection(db, "groceries");
 
-    // Add task to Firestore
     async function addTask(taskText, listName) {
       try {
         const ref = listName === 'todos' ? todoRef : groceryRef;
         await addDoc(ref, { task: taskText });
-        loadTasks(listName); // Reload tasks after adding
+        loadTasks(listName);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
     }
 
-    // Load tasks from Firestore
     async function loadTasks(listName) {
       const taskList = document.getElementById(`${listName}-list`);
-      taskList.innerHTML = ''; // Clear the list before loading new data
-
+      taskList.innerHTML = '';
       const querySnapshot = await getDocs(listName === 'todos' ? todoRef : groceryRef);
       querySnapshot.forEach((doc) => {
         const task = doc.data().task;
@@ -53,64 +45,93 @@
       });
     }
 
-    // Remove task from Firestore
     window.removeTask = async function(listName, id) {
       try {
         const ref = listName === 'todos' ? todoRef : groceryRef;
         await deleteDoc(doc(db, listName, id));
-        loadTasks(listName); // Reload tasks after removal
+        loadTasks(listName);
       } catch (e) {
         console.error("Error removing task: ", e);
       }
     };
 
-    // Add event listeners to the Add Task buttons
     document.addEventListener('DOMContentLoaded', function() {
-      // To-Do list
       document.getElementById('add-todo-btn').addEventListener('click', function() {
         const taskInput = document.getElementById('todo-input').value;
         if (taskInput) {
-          addTask(taskInput, 'todos');  // Add task to To-Do list
-          document.getElementById('todo-input').value = '';  // Clear the input after adding
+          addTask(taskInput, 'todos');
+          document.getElementById('todo-input').value = '';
         }
       });
 
-      // Grocery list
       document.getElementById('add-grocery-btn').addEventListener('click', function() {
         const taskInput = document.getElementById('grocery-input').value;
         if (taskInput) {
-          addTask(taskInput, 'groceries');  // Add task to Grocery list
-          document.getElementById('grocery-input').value = '';  // Clear the input after adding
+          addTask(taskInput, 'groceries');
+          document.getElementById('grocery-input').value = '';
         }
       });
 
-      // Load tasks on page load
       loadTasks('todos');
       loadTasks('groceries');
     });
   </script>
+  <!-- Tomorrow.io Weather Widget Script -->
+  <script>
+    (function(d, s, id) {
+      if (d.getElementById(id)) {
+        if (window.__TOMORROW__) {
+          window.__TOMORROW__.renderWidget();
+        }
+        return;
+      }
+      const fjs = d.getElementsByTagName(s)[0];
+      const js = d.createElement(s);
+      js.id = id;
+      js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'tomorrow-sdk');
+  </script>
   <style>
     body {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
+      margin: 0;
       padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+    .weather-container {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .calendar-container {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .lists-container {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .list-section {
-      width: 30%;
-      min-width: 300px;
-      padding: 10px;
-      border: 1px solid #ccc;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      background-color: #f9f9f9;
-      margin: 10px;
     }
     h2 {
-      text-align: center;
+      margin-top: 0;
+      color: #fff;
     }
     ul {
       list-style-type: none;
-      padding-left: 0;
+      padding: 0;
     }
     li {
       display: flex;
@@ -118,66 +139,80 @@
       padding: 8px 0;
     }
     button {
-      background-color: red;
+      background-color: #ff4444;
       color: white;
       border: none;
       padding: 5px 10px;
+      border-radius: 4px;
       cursor: pointer;
     }
     input {
-      width: 80%;
+      width: 70%;
       padding: 5px;
-      margin-bottom: 10px;
+      margin-right: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 4px;
     }
     .tomorrow {
-      width: 100%;
-      padding-bottom: 22px;
-      position: relative;
+      max-width: 400px;
     }
-    .tomorrow a {
-      position: absolute;
-      bottom: 0;
-      transform: translateX(-50%);
-      left: 50%;
+    iframe {
+      max-width: 100%;
+      height: 400px;
     }
   </style>
 </head>
 <body>
-  <!-- To-Do List Section -->
-  <div class="list-section">
-    <h2>To-Do List</h2>
-    <input type="text" id="todo-input" placeholder="Add a To-Do task">
-    <button id="add-todo-btn">Add Task</button>
-    <ul id="todos-list"></ul>
-  </div>
-
-  <!-- Grocery List Section -->
-  <div class="list-section">
-    <h2>Grocery List</h2>
-    <input type="text" id="grocery-input" placeholder="Add a Grocery task">
-    <button id="add-grocery-btn">Add Task</button>
-    <ul id="groceries-list"></ul>
-  </div>
-
-  <!-- Weather Widget Section -->
-  <div class="list-section">
+  <!-- Weather Section -->
+  <div class="weather-container">
     <h2>Weather</h2>
     <div class="tomorrow"
       data-location-id="114990"
       data-language="EN"
       data-unit-system="IMPERIAL"
       data-skin="light"
-      data-widget-type="upcoming">
-      <a
-        href="https://www.tomorrow.io/weather-api/"
+      data-widget-type="upcoming"
+      style="padding-bottom:22px;position:relative;">
+      <a href="https://www.tomorrow.io/weather-api/"
         rel="nofollow noopener noreferrer"
-        target="_blank">
-        <img
-          alt="Powered by the Tomorrow.io Weather API"
+        target="_blank"
+        style="position:absolute;bottom:0;transform:translateX(-50%);left:50%;">
+        <img alt="Powered by Tomorrow.io"
           src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
           width="250"
           height="18"/>
       </a>
+    </div>
+  </div>
+
+  <!-- Calendar Section -->
+  <div class="calendar-container">
+    <h2>Calendar</h2>
+    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FChicago&showPrint=0&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043" 
+      style="border:solid 1px #777" 
+      width="800" 
+      height="600" 
+      frameborder="0" 
+      scrolling="no"></iframe>
+  </div>
+
+  <!-- Lists Section -->
+  <div class="lists-container">
+    <!-- To-Do List -->
+    <div class="list-section">
+      <h2>To-Do List</h2>
+      <input type="text" id="todo-input" placeholder="Add a task">
+      <button id="add-todo-btn">Add</button>
+      <ul id="todos-list"></ul>
+    </div>
+
+    <!-- Grocery List -->
+    <div class="list-section">
+      <h2>Grocery List</h2>
+      <input type="text" id="grocery-input" placeholder="Add an item">
+      <button id="add-grocery-btn">Add</button>
+      <ul id="groceries-list"></ul>
     </div>
   </div>
 </body>
