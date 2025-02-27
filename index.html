@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Family Dashboard</title>
-  <!-- Firebase SDK -->
   <script type="module">
-    // Import the functions you need from the SDKs you need
+    // Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-    // Firebase configuration
+    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBE8GbgeHzxoExLq9q2xfMOhtpN13v_SPw",
       authDomain: "fir-familydashboard.firebaseapp.com",
@@ -24,195 +23,93 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Reference to the Firestore collections
-    const todoRef = collection(db, "todos");
-    const groceryRef = collection(db, "groceries");
+    const tasksRef = collection(db, "tasks");
 
-    // Add task to Firestore
-    async function addTask(taskText, listName) {
+    async function addTask(taskText) {
       try {
-        const ref = listName === 'todos' ? todoRef : groceryRef;
-        await addDoc(ref, { task: taskText });
-        loadTasks(listName); // Reload tasks after adding
+        await addDoc(tasksRef, { task: taskText });
+        loadTasks();
       } catch (e) {
         console.error("Error adding document: ", e);
       }
     }
 
-    // Load tasks from Firestore
-    async function loadTasks(listName) {
-      const taskList = document.getElementById(`${listName}-list`);
-      taskList.innerHTML = ''; // Clear the list before loading new data
-
-      const querySnapshot = await getDocs(listName === 'todos' ? todoRef : groceryRef);
+    async function loadTasks() {
+      const todoList = document.getElementById('todo-list');
+      todoList.innerHTML = '';
+      const querySnapshot = await getDocs(collection(db, "tasks"));
       querySnapshot.forEach((doc) => {
         const task = doc.data().task;
         const li = document.createElement('li');
-        li.innerHTML = `${task} <button onclick="removeTask('${listName}', '${doc.id}')">Remove</button>`;
-        taskList.appendChild(li);
+        li.innerHTML = `${task} <button onclick="removeTask('${doc.id}')">Remove</button>`;
+        todoList.appendChild(li);
       });
     }
 
-    // Remove task from Firestore
-    window.removeTask = async function(listName, id) {
+    window.removeTask = async function(id) {
       try {
-        const ref = listName === 'todos' ? todoRef : groceryRef;
-        await deleteDoc(doc(db, listName, id));
-        loadTasks(listName); // Reload tasks after removal
+        await deleteDoc(doc(db, "tasks", id));
+        loadTasks();
       } catch (e) {
         console.error("Error removing task: ", e);
       }
     };
 
-    // Add event listeners to the Add Task buttons
     document.addEventListener('DOMContentLoaded', function() {
-      // To-Do list
-      document.getElementById('add-todo-btn').addEventListener('click', function() {
-        const taskInput = document.getElementById('todo-input').value;
+      document.getElementById('add-task-btn').addEventListener('click', function() {
+        const taskInput = document.getElementById('task-input').value;
         if (taskInput) {
-          addTask(taskInput, 'todos');  // Add task to To-Do list
-          document.getElementById('todo-input').value = '';  // Clear the input after adding
+          addTask(taskInput);
+          document.getElementById('task-input').value = '';
         }
       });
 
-      // Grocery list
-      document.getElementById('add-grocery-btn').addEventListener('click', function() {
-        const taskInput = document.getElementById('grocery-input').value;
-        if (taskInput) {
-          addTask(taskInput, 'groceries');  // Add task to Grocery list
-          document.getElementById('grocery-input').value = '';  // Clear the input after adding
-        }
-      });
-
-      // Load tasks on page load
-      loadTasks('todos');
-      loadTasks('groceries');
+      loadTasks();
+      fetchWeather();  // Call to fetch weather data
     });
+
+    // Weather API integration
+    async function fetchWeather() {
+      const weatherApiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API Key
+      const city = 'YOUR_CITY'; // Replace with the city you want to show weather for
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}&units=metric`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        displayWeather(data);
+      } catch (error) {
+        console.error('Error fetching weather:', error);
+      }
+    }
+
+    // Display weather data on the page
+    function displayWeather(data) {
+      const weatherSection = document.getElementById('weather');
+      const temp = data.main.temp;
+      const description = data.weather[0].description;
+      const icon = `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+
+      weatherSection.innerHTML = `
+        <h2>Weather</h2>
+        <p>Temperature: ${temp}°C</p>
+        <p>Description: ${description}</p>
+        <img src="${icon}" alt="Weather Icon">
+      `;
+    }
   </script>
-  <style>
-    body {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      padding: 20px;
-    }
-    .list-section {
-      width: 30%;
-      min-width: 300px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-      margin: 10px;
-    }
-    h2 {
-      text-align: center;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    li {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-    }
-    button {
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-    input {
-      width: 80%;
-      padding: 5px;
-      margin-bottom: 10px;
-    }
-    .tomorrow {
-      width: 100%;
-      padding-bottom: 22px;
-      position: relative;
-    }
-    .tomorrow a {
-      position: absolute;
-      bottom: 0;
-      transform: translateX(-50%);
-      left: 50%;
-    }
-  </style>
 </head>
 <body>
-  <!-- To-Do List Section -->
-  <div class="list-section">
-    <h2>To-Do List</h2>
-    <input type="text" id="todo-input" placeholder="Add a To-Do task">
-    <button id="add-todo-btn">Add Task</button>
-    <ul id="todos-list"></ul>
-  </div>
+  <h1>Family Dashboard</h1>
 
-  <!-- Grocery List Section -->
-  <div class="list-section">
-    <h2>Grocery List</h2>
-    <input type="text" id="grocery-input" placeholder="Add a Grocery task">
-    <button id="add-grocery-btn">Add Task</button>
-    <ul id="groceries-list"></ul>
-  </div>
+  <!-- Weather Section -->
+  <div id="weather"></div>
 
-  <!-- Weather Widget Section -->
-<script>
-        (function(d, s, id) {
-            if (d.getElementById(id)) {
-                if (window.__TOMORROW__) {
-                    window.__TOMORROW__.renderWidget();
-                }
-                return;
-            }
-            const fjs = d.getElementsByTagName(s)[0];
-            const js = d.createElement(s);
-            js.id = id;
-            js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
+  <!-- Todo List Section -->
+  <h2>Todo List</h2>
+  <ul id="todo-list"></ul>
 
-            fjs.parentNode.insertBefore(js, fjs);
-        })(document, 'script', 'tomorrow-sdk');
-        </script>
-
-        <div class="tomorrow"
-           data-location-id="114990"
-           data-language="EN"
-           data-unit-system="IMPERIAL"
-           data-skin="light"
-           data-widget-type="upcoming"
-           style="padding-bottom:22px;position:relative;"
-        >
-          <a
-            href="https://www.tomorrow.io/weather-api/"
-            rel="nofollow noopener noreferrer"
-            target="_blank"
-            style="position: absolute; bottom: 0; transform: translateX(-50%); left: 50%;"
-          >
-            <img
-              alt="Powered by the Tomorrow.io Weather API"
-              src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-              width="250"
-              height="18"
-            />
-          </a>
-        </div>
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Color</title>
-    <style>
-        body {
-            background-color: #181818; /* Slate Grey in Hex */
-        }
-    </style>
-</head>
-</html>
-    </div>
-  </div>
+  <input type="text" id="task-input" placeholder="Add a new task">
+  <button id="add-task-btn">Add Task</button>
 </body>
 </html>
