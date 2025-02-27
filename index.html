@@ -117,16 +117,16 @@
       grid-column: 2;
       grid-row: 2;
       display: flex;
-      flex-direction: row; /* Changed from column to row */
+      flex-direction: row;
       gap: 20px;
-      justify-content: space-between; /* Added to distribute space */
+      justify-content: space-between;
     }
     .list-section {
       padding: 15px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      flex: 1; /* Added to make lists take equal width */
-      min-width: 0; /* Prevents overflow */
+      flex: 1;
+      min-width: 0;
     }
     h2 {
       margin-top: 0;
@@ -164,6 +164,10 @@
       max-width: 100%;
       height: 400px;
     }
+    #tracker {
+      font-size: 24px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -198,6 +202,32 @@
       height="600" 
       frameborder="0" 
       scrolling="no"></iframe>
+
+    <!-- Ramadan Tracker Widget -->
+    <h2>Ramadan Tracker</h2>
+    <p id="tracker"></p>
+    <script>
+        // Set Ramadan 2025 start date as February 28, 2025
+        const ramadanStart = new Date('2025-02-28T00:00:00');  
+        const ramadanDays = 29; // Typically 29 or 30 days
+
+        function updateTracker() {
+            const today = new Date();
+            const timeDiff = today - ramadanStart;
+            const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+            if (dayNumber >= 1 && dayNumber <= ramadanDays) {
+                const daysLeft = ramadanDays - dayNumber;
+                document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
+            } else if (dayNumber < 1) {
+                document.getElementById('tracker').textContent = "Ramadan hasn't started yet!";
+            } else {
+                document.getElementById('tracker').textContent = "Ramadan 2025 is over!";
+            }
+        }
+
+        updateTracker();
+    </script>
   </div>
 
   <!-- Lists Section -->
@@ -213,7 +243,7 @@
     <!-- Grocery List -->
     <div class="list-section">
       <h2>Grocery List</h2>
-      <input type="text" id="grocery-input" placeholder="Add an item">
+      <input type="text" id="grocery-input" placeholder="Add a grocery item">
       <button id="add-grocery-btn">Add</button>
       <ul id="groceries-list"></ul>
     </div>
