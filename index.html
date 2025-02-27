@@ -76,22 +76,6 @@
       loadTasks('groceries');
     });
   </script>
-  <!-- Tomorrow.io Weather Widget Script -->
-  <script>
-    (function(d, s, id) {
-      if (d.getElementById(id)) {
-        if (window.__TOMORROW__) {
-          window.__TOMORROW__.renderWidget();
-        }
-        return;
-      }
-      const fjs = d.getElementsByTagName(s)[0];
-      const js = d.createElement(s);
-      js.id = id;
-      js.src = "https://www.tomorrow.io/v1/widget/sdk/sdk.bundle.min.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    })(document, 'script', 'tomorrow-sdk');
-  </script>
   <style>
     body {
       margin: 0;
@@ -117,16 +101,16 @@
       grid-column: 2;
       grid-row: 2;
       display: flex;
-      flex-direction: row;
+      flex-direction: row; /* Changed from column to row */
       gap: 20px;
-      justify-content: space-between;
+      justify-content: space-between; /* Added to distribute space */
     }
     .list-section {
       padding: 15px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      flex: 1;
-      min-width: 0;
+      flex: 1; /* Added to make lists take equal width */
+      min-width: 0; /* Prevents overflow */
     }
     h2 {
       margin-top: 0;
@@ -157,16 +141,9 @@
       border: none;
       border-radius: 4px;
     }
-    .tomorrow {
-      max-width: 400px;
-    }
     iframe {
       max-width: 100%;
       height: 400px;
-    }
-    #tracker {
-      font-size: 24px;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -174,57 +151,21 @@
   <!-- Weather Section -->
   <div class="weather-container">
     <h2>Weather</h2>
-    <div class="tomorrow"
-      data-location-id="114990"
-      data-language="EN"
-      data-unit-system="IMPERIAL"
-      data-skin="light"
-      data-widget-type="upcoming"
-      style="padding-bottom:22px;position:relative;">
-      <a href="https://www.tomorrow.io/weather-api/"
-        rel="nofollow noopener noreferrer"
-        target="_blank"
-        style="position:absolute;bottom:0;transform:translateX(-50%);left:50%;">
-        <img alt="Powered by Tomorrow.io"
-          src="https://weather-website-client.tomorrow.io/img/powered-by.svg"
-          width="250"
-          height="18"/>
-      </a>
+    <div id="ww_f9a11719b1df9" v="1.3" loc="id" a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":["wl1431"],"font":"Arial","sl_ics":"one_a","sl_sot":"fahrenheit","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>
+      More forecasts: <a href="https://oneweather.org/new_york_city/30_days/" id="ww_f9a11719b1df9_u" target="_blank">New York weather forecast 30 days</a>
     </div>
+    <script async src="https://app3.weatherwidget.org/js/?id=ww_f9a11719b1df9"></script>
   </div>
 
-  <!-- Ramadan Tracker Section -->
-  <div class="ramadan-container">
-    <h2>Ramadan Tracker</h2>
-    <p id="tracker"></p>
-    <script>
-        // Set Ramadan 2025 start date as February 28, 2025
-        const ramadanStart = new Date('2025-02-28T00:00:00');  
-        const ramadanDays = 29; // Typically 29 or 30 days
-
-        function updateTracker() {
-            const today = new Date();
-            const timeDiff = today - ramadanStart;
-            const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
-
-            if (dayNumber >= 1 && dayNumber <= ramadanDays) {
-                const daysLeft = ramadanDays - dayNumber;
-                document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
-            } else if (dayNumber < 1) {
-                document.getElementById('tracker').textContent = "Ramadan hasn't started yet!";
-            } else {
-                document.getElementById('tracker').textContent = "Ramadan 2025 is over!";
-            }
-        }
-
-        updateTracker();
-    </script>
-  </div>
-
-  <!-- Prayer Tracker Section -->
-  <div class="prayer-container">
-    <h2>Prayer Tracker</h2>
-    <iframe src="http://prayer-time.com/simple-widget/?width=300&locid=1355&method=2" width="300" style="overflow:hidden;height:650px;width:100%;" ></iframe>
+  <!-- Calendar Section -->
+  <div class="calendar-container">
+    <h2>Calendar</h2>
+    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FChicago&showPrint=0&src=ZW4.udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043" 
+      style="border:solid 1px #777" 
+      width="800" 
+      height="600" 
+      frameborder="0" 
+      scrolling="no"></iframe>
   </div>
 
   <!-- Lists Section -->
@@ -240,10 +181,16 @@
     <!-- Grocery List -->
     <div class="list-section">
       <h2>Grocery List</h2>
-      <input type="text" id="grocery-input" placeholder="Add a grocery item">
+      <input type="text" id="grocery-input" placeholder="Add an item">
       <button id="add-grocery-btn">Add</button>
       <ul id="groceries-list"></ul>
     </div>
+  </div>
+
+  <!-- Prayer Tracker Section -->
+  <div class="prayer-container">
+    <h2>Prayer Times</h2>
+    <iframe src="https://timesprayer.com/widgets.php?frame=3&amp;lang=en&amp;name=frisco&amp;avachang=true&amp;method=2&amp;fcolor=1B1B1B&amp;scolor=E4E4DE&amp;tcolor=C4C5BA&amp;frcolor=595f39" style="border: medium; overflow: hidden; width: 400px; height: 265px;"></iframe>
   </div>
 </body>
 </html>
