@@ -172,6 +172,13 @@
       margin: 0; /* Remove default margin for alignment */
       font-size: 1.1em; /* Match h2 size for balance */
     }
+    .prayer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Aligns content to the left */
+      max-height: 340px; /* Caps height to fit iframe + header */
+      overflow: hidden; /* Prevents overflow causing white space */
+    }
   </style>
 </head>
 <body>
@@ -217,7 +224,7 @@
   <div class="prayer-container">
     <h2>Prayer Times</h2>
     <iframe src="https://timesprayer.com/widgets.php?frame=3&lang=en&name=frisco&avachang=true&method=2&fcolor=1B1B1B&scolor=E4E4DE&tcolor=C4C5BA&frcolor=595f39" 
-      style="border: medium; overflow: hidden; width: 600px; height: 400px;"></iframe>
+      style="border: medium; overflow: hidden; width: 600px; height: 300px;"></iframe>
   </div>
 
   <!-- Calendar Section -->
