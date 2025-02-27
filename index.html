@@ -79,40 +79,38 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       font-family: Arial, sans-serif;
       background-color: #000;
       color: #fff;
       height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto;
-      gap: 10px; /* Reduced gap to bring sections closer */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
     }
     .weather-container,
     .ramadan-container,
     .prayer-container {
-      grid-column: 1 / -1; /* Ensure these sections span the full width */
-      margin-bottom: 10px; /* Reduced bottom margin */
+      width: 100%;
+      margin-bottom: 10px;
     }
     .calendar-container {
-      grid-column: 2;
-      grid-row: 1;
+      width: 100%;
     }
     .lists-container {
-      grid-column: 2;
-      grid-row: 2;
       display: flex;
-      flex-direction: row; /* Row layout for the lists */
-      gap: 15px; /* Reduced gap between lists */
+      flex-direction: row;
       justify-content: space-between;
+      width: 100%;
+      margin-top: 20px;
     }
     .list-section {
       padding: 15px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      flex: 1;
-      min-width: 0;
+      width: 45%;
     }
     h2 {
       margin-top: 0;
@@ -144,8 +142,9 @@
       border-radius: 4px;
     }
     iframe {
-      max-width: 100%;
-      height: 400px;
+      width: 100%;
+      height: 600px;
+      border: none;
     }
   </style>
 </head>
@@ -221,20 +220,20 @@
     <h2>Prayer Times</h2>
     <p id="prayer-times">Loading...</p>
     <script>
-        async function getPrayerTimes() {
-            const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=New%20York&country=USA&method=2');
-            const data = await response.json();
-            const prayerTimes = data.data.timings;
-            const prayerText = `
-                Fajr: ${prayerTimes.Fajr}
-                Dhuhr: ${prayerTimes.Dhuhr}
-                Asr: ${prayerTimes.Asr}
-                Maghrib: ${prayerTimes.Maghrib}
-                Isha: ${prayerTimes.Isha}
-            `;
-            document.getElementById('prayer-times').textContent = prayerText;
-        }
-        getPrayerTimes();
+      async function getPrayerTimes() {
+        const response = await fetch('https://api.aladhan.com/v1/timingsByCity?city=New%20York&country=USA&method=2');
+        const data = await response.json();
+        const prayerTimes = data.data.timings;
+        const prayerText = `
+          Fajr: ${prayerTimes.Fajr}
+          Dhuhr: ${prayerTimes.Dhuhr}
+          Asr: ${prayerTimes.Asr}
+          Maghrib: ${prayerTimes.Maghrib}
+          Isha: ${prayerTimes.Isha}
+        `;
+        document.getElementById('prayer-times').textContent = prayerText;
+      }
+      getPrayerTimes();
     </script>
   </div>
 </body>
