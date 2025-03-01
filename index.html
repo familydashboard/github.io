@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Magic Mirror Display</title>
   <!-- Firebase SDK -->
   <script type="module">
@@ -77,130 +77,146 @@
     });
   </script>
   <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #000; /* Fallback if Background.png fails */
-    color: #fff;
-    overflow: hidden;
-  }
-  .mirror-container {
-    width: 1920px;
-    height: 1080px;
-    position: relative;
-  }
-  /* Weather */
-  .weather-container {
-    top: 10px;
-    left: 10px;
-    width: 775px;
-    height: 519px;
-  }
-  #weather-widget {
-    width: 436px;
-    margin: 10px auto; /* Center the fixed 436px widget in 775px box */
-  }
-  /* Ramadan Tracker */
-  .ramadan-container {
-    top: 539px; /* 519px + 20px gap */
-    left: 10px;
-    width: 775px;
-    height: 70px;
-  }
-  .ramadan-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px;
-  }
-  .ramadan-header h2, .ramadan-header p {
-    margin: 0;
-    font-size: 1.1em;
-  }
-  #tracker {
-    color: #0080FE;
-  }
-  /* Prayer */
-  .prayer-container {
-    top: 619px; /* 539px + 70px + 10px gap */
-    left: 10px;
-    width: 775px;
-    height: 403px;
-  }
-  /* Calendar */
-  .calendar-container {
-    top: 10px;
-    left: 795px; /* 775px + 20px gap */
-    width: 1057px;
-    height: 519px;
-  }
-  /* Lists */
-  .lists-container {
-    top: 539px; /* Align with Ramadan */
-    left: 795px;
-    width: 1057px;
-    height: 482px;
-  }
-  .list-section {
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent for readability */
-    border-radius: 8px;
-  }
-  .todo-section {
-    top: 10px;
-    left: 10px;
-    width: 505px;
-    height: 462px;
-  }
-  .grocery-section {
-    top: 10px;
-    left: 542px; /* 525px + 17px gap */
-    width: 505px;
-    height: 462px;
-  }
-  h2 {
-    margin: 0 0 5px 0;
-    font-size: 1.1em;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-    font-size: 11px;
-  }
-  li {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-  }
-  button {
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    padding: 2px 5px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  input {
-    width: 70%;
-    padding: 4px;
-    margin-right: 6px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 4px;
-  }
-</style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+      width: 1920px;
+      height: 1080px;
+    }
+    .mirror-container {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      overflow: hidden;
+      /* Uncomment if still too big: transform: scale(0.75); transform-origin: top left; */
+    }
+    .weather-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 775px;
+      height: 519px;
+    }
+    #weather-widget {
+      width: 436px;
+      margin: 10px auto;
+    }
+    .ramadan-container {
+      position: absolute;
+      top: 539px; /* 519 + 20px gap */
+      left: 10px;
+      width: 775px;
+      height: 70px;
+    }
+    .prayer-container {
+      position: absolute;
+      top: 619px; /* 539 + 70 + 10px */
+      left: 10px;
+      width: 775px;
+      height: 403px;
+    }
+    .calendar-container {
+      position: absolute;
+      top: 10px;
+      left: 795px; /* 775 + 20px gap */
+      width: 1057px;
+      height: 519px;
+    }
+    .lists-container {
+      position: absolute;
+      top: 539px;
+      left: 795px;
+      width: 1057px;
+      height: 482px;
+    }
+    .todo-section {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 505px;
+      height: 462px;
+    }
+    .grocery-section {
+      position: absolute;
+      top: 10px;
+      left: 542px; /* 525 + 17px gap */
+      width: 505px;
+      height: 462px;
+    }
+    img, iframe {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .ramadan-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px;
+    }
+    .ramadan-header h2, .ramadan-header p {
+      margin: 0;
+      font-size: 1.1em;
+    }
+    #tracker {
+      color: #0080FE;
+    }
+    .list-section {
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow-y: auto;
+    }
+    h2 {
+      margin: 0 0 5px 0;
+      font-size: 1.1em;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      font-size: 11px;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+    button {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 2px 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input {
+      width: 70%;
+      padding: 4px;
+      margin-right: 6px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 4px;
+    }
+    img { z-index: 1; }
+    .weather-container, .ramadan-container, .prayer-container, .calendar-container, .lists-container { z-index: 2; }
+  </style>
 </head>
 <body>
-  <div class="mirror-container" style="width: 1920px; height: 1080px; position: relative;">
+  <div class="mirror-container">
     <!-- Background Image -->
-    <img src="images/Background.png" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;">
-
+    <img src="images/Background.png">
+    
     <!-- Weather Section -->
-    <div class="weather-container" style="position: absolute; top: 10px; left: 10px; width: 775px; height: 519px; z-index: 2;">
-      <img src="images/Weather.png" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
-      <div id="weather-widget" style="position: relative; width: 436px; margin: 10px auto;">
+    <div class="weather-container">
+      <img src="images/Weather.png">
+      <div id="weather-widget">
         <div id="ww_f9a11719b1df9" v="1.3" loc="id" a='{"t":"horizontal","lang":"en","sl_lpl":1,"ids":["wl1431"],"font":"Arial","sl_ics":"one_a","sl_sot":"fahrenheit","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>
           More forecasts: <a href="https://oneweather.org/new_york_city/30_days/" id="ww_f9a11719b1df9_u" target="_blank">New York weather forecast 30 days</a>
         </div>
@@ -209,39 +225,58 @@
     </div>
 
     <!-- Ramadan Tracker Section -->
-    <div class="ramadan-container" style="position: absolute; top: 539px; left: 10px; width: 775px; height: 70px; z-index: 2;">
-      <img src="images/Ramadan Tracker.png" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
-      <div class="ramadan-header" style="position: relative; padding: 10px;">
+    <div class="ramadan-container">
+      <img src="images/Ramadan Tracker.png">
+      <div class="ramadan-header">
         <h2>Ramadan Tracker</h2>
         <p id="tracker"></p>
       </div>
+      <script>
+        const ramadanStart = new Date('2025-02-27T00:00:00');  
+        const ramadanDays = 29;
+
+        function updateTracker() {
+          const today = new Date();
+          const timeDiff = today - ramadanStart;
+          const dayNumber = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+          if (dayNumber >= 1 && dayNumber <= ramadanDays) {
+            const daysLeft = ramadanDays - dayNumber;
+            document.getElementById('tracker').textContent = `Day ${dayNumber} - ${daysLeft} Days Left`;
+          } else if (dayNumber < 1) {
+            document.getElementById('tracker').textContent = "Hasn't started yet!";
+          } else {
+            document.getElementById('tracker').textContent = "2025 is over!";
+          }
+        }
+
+        updateTracker();
+      </script>
     </div>
 
     <!-- Prayer Tracker Section -->
-    <div class="prayer-container" style="position: absolute; top: 619px; left: 10px; width: 775px; height: 403px; z-index: 2;">
-      <img src="images/Prayer.png" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
-      <iframe src="https://timesprayer.com/widgets.php?frame=3&lang=en&name=frisco&avachang=true&method=2&fcolor=1B1B1B&scolor=E4E4DE&tcolor=C4C5BA&frcolor=595f39" 
-        style="border: none; position: relative; width: 775px; height: 403px;"></iframe>
+    <div class="prayer-container">
+      <img src="images/Prayer.png">
+      <iframe src="https://timesprayer.com/widgets.php?frame=3&lang=en&name=frisco&avachang=true&method=2&fcolor=1B1B1B&scolor=E4E4DE&tcolor=C4C5BA&frcolor=595f39"></iframe>
     </div>
 
     <!-- Calendar Section -->
-    <div class="calendar-container" style="position: absolute; top: 10px; left: 795px; width: 1057px; height: 519px; z-index: 2;">
-      <img src="images/Calendar.png" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
-      <iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&ctz=America%2FChicago&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showNav=0&showTitle=0&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043" 
-        style="border: none; position: relative; width: 1057px; height: 519px;"></iframe>
+    <div class="calendar-container">
+      <img src="images/Calendar.png">
+      <iframe src="https://calendar.google.com/calendar/embed?height=400&wkst=1&ctz=America%2FChicago&showPrint=0&showTabs=0&showCalendars=0&showTz=0&showNav=0&showTitle=0&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%230B8043"></iframe>
     </div>
 
     <!-- Lists Section -->
-    <div class="lists-container" style="position: absolute; top: 539px; left: 795px; width: 1057px; height: 482px; z-index: 2;">
-      <img src="images/Todo.png" style="width: 525px; height: 482px; position: absolute; top: 0; left: 0;">
-      <img src="images/Grocery.png" style="width: 525px; height: 482px; position: absolute; top: 0; left: 532px;">
-      <div class="list-section todo-section" style="position: absolute; top: 10px; left: 10px; width: 505px; height: 462px; overflow-y: auto;">
+    <div class="lists-container">
+      <img src="images/Todo.png">
+      <img src="images/Grocery.png">
+      <div class="list-section todo-section">
         <h2>To-Do List</h2>
         <input type="text" id="todo-input" placeholder="Add a task">
         <button id="add-todo-btn">Add</button>
         <ul id="todos-list"></ul>
       </div>
-      <div class="list-section grocery-section" style="position: absolute; top: 10px; left: 542px; width: 505px; height: 462px; overflow-y: auto;">
+      <div class="list-section grocery-section">
         <h2>Grocery List</h2>
         <input type="text" id="grocery-input" placeholder="Add an item">
         <button id="add-grocery-btn">Add</button>
@@ -250,3 +285,4 @@
     </div>
   </div>
 </body>
+</html>
