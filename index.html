@@ -108,13 +108,11 @@
       height: auto; /* Maintains aspect ratio */
       display: block; /* Natural flow, not absolute */
     }
-    .weatherwidget-io {
-      position: absolute; /* Overlays the image */
-      top: 70; !important; /* Aligns with image top */
-      left: 0; /* Aligns with image left */
-      width: 699px; /* Matches container */
-      z-index: 2; /* In front of image */
-      display: block;
+    .#weather-widget {
+      width: 436px;
+      margin: 70px auto; /* Moves widget down */
+      position: relative;
+      z-index: 3;
     }
     .ramadan-container {
       position: absolute;
