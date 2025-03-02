@@ -101,11 +101,27 @@
       overflow: visible;
       margin-top: 10px; /* Assuming this is present */
     }
-    #weather-widget {
-      width: 436px;
-      margin: 10px auto;
-      position: relative;
-      z-index: 3;
+    .weather-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 699px; /* Matches container width */
+    height: auto; /* Adjusts to image’s aspect ratio */
+    z-index: 1; /* Behind the widget */
+    }
+    .weather-container {
+    grid-column: 1;
+    grid-row: 1;
+    width: 699px;
+    overflow: visible;
+    margin-top: 10px;
+    position: relative; /* Contains the absolute image */
+    }
+    .weatherwidget-io {
+    position: relative;
+    z-index: 2; /* In front of the image */
+    display: block; /* Ensures it behaves as a block element */
+    width: 699px; /* Matches container */
     }
     .ramadan-container {
       position: absolute;
@@ -240,14 +256,14 @@
     <!-- Background Image -->
     <img src="images/Background.png">
     
-    <!-- Weather Section -->
-<!-- Weather Section -->
-<div class="weather-container">
-  <a class="weatherwidget-io" href="https://forecast7.com/en/33d15n96d82/frisco/?unit=us" data-label_1="FRISCO" data-label_2="WEATHER" data-theme="weather_one" >FRISCO WEATHER</a>
-  <script>
-  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-  </script>
-</div>
+  <!-- Weather Section -->
+  <div class="weather-container">
+    <img src="images/Weather.png" class="weather-background">
+    <a class="weatherwidget-io" href="https://forecast7.com/en/33d15n96d82/frisco/?unit=us" data-label_1="FRISCO" data-label_2="WEATHER" data-theme="weather_one" >FRISCO WEATHER</a>
+    <script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+    </script>
+  </div>
 
     <!-- Ramadan Tracker Section -->
     <div class="ramadan-container">
