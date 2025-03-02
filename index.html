@@ -97,31 +97,23 @@
     .weather-container {
       grid-column: 1;
       grid-row: 1;
-      width: 699px;
+      width: 699px; /* New container width */
       overflow: visible;
-      margin-top: 10px; /* Assuming this is present */
+      margin-top: 10px;
+      position: relative; /* Keeps layering control */
     }
     .weather-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 699px; /* Matches container width */
-    height: auto; /* Adjusts to image’s aspect ratio */
-    z-index: 1; /* Behind the widget */
-    }
-    .weather-container {
-    grid-column: 1;
-    grid-row: 1;
-    width: 699px;
-    overflow: visible;
-    margin-top: 10px;
-    position: relative; /* Contains the absolute image */
+      width: 450px; /* Original size */
+      height: auto; /* Maintains aspect ratio */
+      display: block; /* Natural flow, not absolute */
     }
     .weatherwidget-io {
-    position: relative;
-    z-index: 2; /* In front of the image */
-    display: block; /* Ensures it behaves as a block element */
-    width: 699px; /* Matches container */
+      position: absolute; /* Overlays the image */
+      top: 0; /* Aligns with image top */
+      left: 0; /* Aligns with image left */
+      width: 699px; /* Matches container */
+      z-index: 2; /* In front of image */
+      display: block;
     }
     .ramadan-container {
       position: absolute;
