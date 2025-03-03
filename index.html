@@ -145,6 +145,20 @@
       z-index: 3;
       border: none;
     }
+    .quran-verse-container {
+      position: absolute;
+      top: 1079px; /* 1069px (prayer end) + 10px gap */
+      left: 10px; /* Align with prayer */
+      width: 775px; /* Match prayer width */
+      height: 200px; /* Adjustable height */
+      overflow: hidden;
+      z-index: 2;
+    }
+    .quran-verse-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
     .calendar-container {
       position: absolute;
       top: 10px;
@@ -341,6 +355,11 @@
       <img src="images/Prayer.png">
       <iframe src="https://timesprayer.com/widgets.php?frame=2&amp;lang=en&amp;name=frisco&amp;sound=true&amp;avachang=true&amp;method=2&amp;fcolor=020301&amp;tcolor=8A9280&amp;frcolor=415C39" style="border: medium; overflow: hidden; width: 750px; height: 274px;"></iframe>
     </div>
+
+    <!-- Daily Quran Verse Section -->
+<div class="quran-verse-container">
+  <iframe src="https://shalauddin-kader.github.io/quran-verse-widget/" frameborder="0"></iframe>
+</div>
 
     <!-- Calendar Section -->
     <div class="calendar-container">
