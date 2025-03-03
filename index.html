@@ -108,10 +108,11 @@
       height: auto; /* Maintains aspect ratio */
       display: block; /* Natural flow, not absolute */
     }
-    .#weather-widget {
+    #weather-widget {
+      position: absolute;
+      top: 50px;
+      left: 164px; /* (765 - 436) / 2 */
       width: 436px;
-      margin: 70px auto; /* Moves widget down */
-      position: relative;
       z-index: 3;
     }
     .ramadan-container {
