@@ -360,9 +360,20 @@
     </div>
 
     <!-- Daily Quran Verse Section -->
+<!-- Daily Quran Verse Section -->
 <div class="quran-verse-container">
-  <iframe src="https://shalauddin-kader.github.io/quran-verse-widget/" frameborder="0"></iframe>
+  <iframe id="quran-verse" src="https://shalauddin-kader.github.io/quran-verse-widget/" frameborder="0"></iframe>
 </div>
+<script>
+  function refreshQuranVerse() {
+    const iframe = document.getElementById('quran-verse');
+    iframe.src = iframe.src; // Reloads iframe
+  }
+  // Refresh every 24 hours (86400000 ms)
+  setInterval(refreshQuranVerse, 86400000);
+  // Initial load
+  refreshQuranVerse();
+</script>
 
     <!-- Calendar Section -->
     <div class="calendar-container">
